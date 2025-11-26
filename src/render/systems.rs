@@ -126,6 +126,7 @@ pub fn prepare_egui_transforms_system(
     render_device: Res<RenderDevice>,
     render_queue: Res<RenderQueue>,
     egui_pipeline: Res<EguiPipeline>,
+    pipeline_cache: Res<PipelineCache>,
 ) -> Result {
     egui_transforms.buffer.clear();
     egui_transforms.offsets.clear();
@@ -154,7 +155,9 @@ pub fn prepare_egui_transforms_system(
             _ => {
                 let transform_bind_group = render_device.create_bind_group(
                     Some("egui transform bind group"),
-                    &egui_pipeline.transform_bind_group_layout,
+                    // &egui_pipeline.transform_bind_group_layout,
+                    &pipeline_cache
+                        .get_bind_group_layout(&egui_pipeline.transform_bind_group_layout),
                     &[BindGroupEntry {
                         binding: 0,
                         resource: egui_transforms.buffer.binding().unwrap(),
@@ -179,6 +182,7 @@ pub fn queue_bind_groups_system(
     render_device: Res<RenderDevice>,
     gpu_images: Res<RenderAssets<GpuImage>>,
     egui_pipeline: Res<EguiPipeline>,
+    pipeline_cache: Res<PipelineCache>,
 ) {
     let egui_texture_iterator = egui_textures.handles().filter_map(|(texture, handle_id)| {
         let gpu_image = gpu_images.get(handle_id)?;
@@ -207,7 +211,8 @@ pub fn queue_bind_groups_system(
 
             let bind_group = render_device.create_bind_group(
                 None,
-                &egui_pipeline.texture_bind_group_layout,
+                // &egui_pipeline.texture_bind_group_layout,
+                &pipeline_cache.get_bind_group_layout(&egui_pipeline.texture_bind_group_layout),
                 &[
                     BindGroupEntry {
                         binding: 0,
@@ -233,7 +238,8 @@ pub fn queue_bind_groups_system(
             .map(|(texture, gpu_image)| {
                 let bind_group = render_device.create_bind_group(
                     None,
-                    &egui_pipeline.texture_bind_group_layout,
+                    // &egui_pipeline.texture_bind_group_layout,
+                    &pipeline_cache.get_bind_group_layout(&egui_pipeline.texture_bind_group_layout),
                     &[
                         BindGroupEntry {
                             binding: 0,
