@@ -220,9 +220,9 @@ pub struct EguiRenderSettings {
 #[derive(Resource)]
 pub struct EguiPipeline {
     /// Transform bind group layout.
-    pub transform_bind_group_layout: BindGroupLayout,
+    pub transform_bind_group_layout: BindGroupLayoutDescriptor,
     /// Texture bind group layout.
-    pub texture_bind_group_layout: BindGroupLayout,
+    pub texture_bind_group_layout: BindGroupLayoutDescriptor,
     /// Is bindless rendering mode enabled
     /// and how many textures can be rendered in one bind group.
     pub bindless: Option<NonZero<u32>>,
@@ -247,7 +247,7 @@ impl FromWorld for EguiPipeline {
             None
         };
 
-        let transform_bind_group_layout = render_device.create_bind_group_layout(
+        let transform_bind_group_layout = BindGroupLayoutDescriptor::new(
             "egui_transform_layout",
             &BindGroupLayoutEntries::single(
                 ShaderStages::VERTEX,
@@ -256,7 +256,7 @@ impl FromWorld for EguiPipeline {
         );
 
         let texture_bind_group_layout = if let Some(bindless) = bindless {
-            render_device.create_bind_group_layout(
+            BindGroupLayoutDescriptor::new(
                 "egui_texture_layout",
                 &BindGroupLayoutEntries::sequential(
                     ShaderStages::FRAGMENT,
@@ -267,7 +267,7 @@ impl FromWorld for EguiPipeline {
                 ),
             )
         } else {
-            render_device.create_bind_group_layout(
+            BindGroupLayoutDescriptor::new(
                 "egui_texture_layout",
                 &BindGroupLayoutEntries::sequential(
                     ShaderStages::FRAGMENT,
