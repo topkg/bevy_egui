@@ -42,8 +42,8 @@ use bevy_render::{
     render_graph::{Node, NodeRunError, RenderGraph, RenderGraphContext},
     render_phase::TrackedRenderPass,
     render_resource::{
-        BindGroupLayout, BindGroupLayoutEntries, FragmentState, RenderPipelineDescriptor,
-        SpecializedRenderPipeline, VertexState,
+        BindGroupLayout, BindGroupLayoutDescriptor, BindGroupLayoutEntries, FragmentState,
+        RenderPipelineDescriptor, SpecializedRenderPipeline, VertexState,
         binding_types::{sampler, texture_2d, uniform_buffer},
     },
     renderer::{RenderContext, RenderDevice},
